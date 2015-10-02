@@ -43,4 +43,4 @@ python manage.py test --settings=smallmonitor.test_settings
 development
 python manage.py runserver --settings=smallmonitor.development_settings 0.0.0.0:2332
 production   add --insecure  close debug can't find static file
-python manage.py runserver --insecure 0.0.0.0:13031
+python manage.py runserver --insecure 0.0.0.0:2332

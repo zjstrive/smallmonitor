@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+import time
 
 
 class App(models.Model):
@@ -10,7 +11,7 @@ class App(models.Model):
     host_id = models.IntegerField()
     group_id = models.IntegerField()
     configuration = models.TextField()
-    status = models.CharField(max_length=12)
+    status = models.CharField(max_length=12) 
     message = models.TextField()
     enable = models.IntegerField(default=1)
     last_update = models.DateTimeField()
@@ -40,6 +41,9 @@ class AppStatistics(models.Model):
         appStatistics = cls(statistics=statistics, app_id=app_id)
         return appStatistics
 
+    def convert_to_epoc(self):
+        return time.mktime(self.time.timetuple())
+
 
 class Group(models.Model):
     class Meta:
@@ -62,6 +66,9 @@ class AppHistory(models.Model):
     status = models.CharField(max_length=32)
     message = models.TextField(null=True)
     time = models.DateTimeField(auto_now=True)
+
+    def convert_to_epoc(self):
+        return self.time.strftime("%Y-%m-%d %H:%M:%S")
 
 
 class Host(models.Model):

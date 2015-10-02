@@ -1,7 +1,7 @@
 {
   "name": "xx",
   "version": "0.0.0",
-  "homepage": "https://github.com/zjstrive/xxmonitor",
+  "homepage": "https://github.com/zjstrive/smallmonitor",
   "authors": [
     "XX.XX <XXX@XXX.com>"
   ],
@@ -12,5 +12,10 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jquery": "2.1.4",
+    "angular": "1.4.7",
+    "bootstrap": "~3.3.5"
+  }
 }

@@ -58,3 +58,11 @@ def verification_string_is_json(string):
         return True
     except:
         return False
+
+
+def RepresentsInt(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False

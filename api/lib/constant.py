@@ -6,3 +6,9 @@ Created on Sep 22, 2015
 
 
 STRFTIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+
+class MonitoringStatus(object):
+    OK = "OK"
+    WARN = "WARN"
+    CRITICAL = "CRITICAL"

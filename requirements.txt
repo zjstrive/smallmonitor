@@ -1,3 +1,7 @@
 nose
 django==1.8.2
 django-ipware
+pymysql
+djangorestframework
+markdown
+django-filter
