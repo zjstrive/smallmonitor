@@ -1,0 +1,10 @@
+.project
+build/
+dist/
+/dm_monitoring.egg-info
+.pydevproject
+.settings/
+__pycache__/
+bower_components/
+*.pyc
+*.log
