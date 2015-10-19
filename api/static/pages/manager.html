@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head >
+<meta charset="UTF-8">
+<title>Manger</title>
+<link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap-theme.css" />
+<link rel="stylesheet" href="/static/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css" />
+<link rel="stylesheet" href="/static/css/manager.css" />
+<script type="text/javascript" src="/static/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="/static/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="/static/js/manager.js"></script>
+</head>
+<body ng-controller="managerController" ng-init="initData()"> 
+<div id="app-body">
+		<div class="panel panel-info">
+          <div class="panel-heading">
+			Info
+           </div>
+           
+           <div style="padding:20px;">
+                <div class="form-horizontal form-widgets col-sm-6">
+                
+                 <div class="form-group">
+                        <label class="control-label col-sm-4" for="name">App Name:</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="text" class="form-control" aria-label="..." ng-value="app.name" disabled="" value="cd_sync_xda_message">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="name">Host:</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="text" class="form-control" aria-label="..." ng-value="getHostNameByid(app.host_id)" disabled="" value="CD">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="name">Last Active:</label>
+                        <div class="col-sm-8 col-md-6">
+                            <input type="text" class="form-control" aria-label="..." ng-value="app.last_update" disabled="" value="2015-10-18 09:48:02">
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="form-horizontal form-widgets col-sm-6">
+                               <div class="form-group">
+                        <label class="control-label col-sm-4" for="name">Status:</label>
+                        <div class="col-sm-8 col-md-6">
+                             <input type="text" class="form-control" aria-label="..." ng-value="app.status" disabled="" value="OK">
+                        </div>
+                    </div>
+                    
+                   <div class="form-group">
+                        <label class="control-label col-sm-4" for="name">Groups:</label>
+                       <div class="col-sm-8 col-md-6">
+						<select class="selectpicker"  data-live-search="true" style="display: none;" data-width="100%" ng-model="app.group_id" ng-options="group.id as group.unique_name for group in groupList">
+					    <option >{{group.unique_name}}</option>
+					  </select>
+							</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="name">Period:</label>
+                        <div class="col-sm-8 col-md-6">
+							<select class="selectpicker "  data-max-options="1"  data-width="100%" ng-model="app_period">
+								<option value=""></option>
+					    		<option >10 minutes</option>
+					    		<option >half an hour</option>
+					    		<option >1 hour</option>
+					    		<option >1 day</option>
+					    		<option >1 week</option>
+					    		<option >1 month</option>
+					  		</select>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="clearfix"></div>
+            </div>
+           
+			<div ng-show="showLoading" style="text-align: center;height:700px;" class="ng-hide">
+			<br><br><br><br><br><br><br><br><br><br><img height="80px;" src="../../static/images/loading.gif">
+			</div>
+			<!-- /.panel-body -->
+			
+					<div class="panel panel-info">
+			<!-- /.panel-heading -->
+			<div class="panel-heading">
+			Configuration
+           </div>
+           <div style="padding:12px;">
+          <table class="table  " width="100%" cellspacing="4" cellpadding="1">
+                <thead>
+                  <tr>
+                    <th class="col-lg-4" style="text-align: center;">When</th>
+                    <th class="col-lg-8" style="text-align: center;">Do</th>
+                  </tr>
+                </thead>
+                <tbody >
+                  <tr class="" align="left" valign="middle"  ng-repeat="condition in configConditions">
+                    <td> {{condition.name}}</td>
+                    <td>
+                      <div class="input-group">
+				      <span class="input-group-addon" id="basic-addon3">SSH</span>
+				      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+				    </div>
+                    <div class="input-group">
+				      <span class="input-group-addon" id="basic-addon3">Send Email To</span>
+				      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+				    </div>
+				    <div class="input-group">
+				      <span class="input-group-addon" id="basic-addon3">Build Jenkins job</span>
+				      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+				      
+				    </div>
+				    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="btn-group btn-group-justified" role="group" aria-label="...">
+			  <div class="btn-group" role="group">
+			    <button type="button" class="btn btn-default">Save</button>
+			  </div>
+			</div>
+           </div>
+		</div>
+    </div>
+</body>
+</html>

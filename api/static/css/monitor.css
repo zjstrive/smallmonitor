@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+.icon-critical {
+	background-color: #d9534f;
+}
+
+.icon-CRITICAL {
+	background-color: #d9534f;
+}
+
+.icon-warn {
+	background-color: #f0ad4e;
+}
+
+.icon-WARN {
+	background-color: #f0ad4e;
+}
+
+.glyphicon-ok-circle {
+	color: #5cb85c;
+}
+
+.glyphicon-remove-circle {
+	color: #d9534f;
+}
+
+.glyphicon-exclamation-sign {
+	color: #f0ad4e;
+}
+
+.icon-ok {
+	background-color: #5cb85c;
+}
+
+.icon-OK {
+	background-color: #5cb85c;
+}
+
+.app-glyphicon-right {
+	top: 2px !important;
+	color: #5bc0de;
+}
+
+.group-app:hover {
+	background-color: rgba(0, 0, 0, 0.0980392);
+}
+
+.app-icon {
+	font-size: 24px;
+	margin-left: 8px;
+}
+
+.app-table {
+	table-layout: fixed;
+	word-wrap: break-word;
+}

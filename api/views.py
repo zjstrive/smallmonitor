@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from api.serializers import GroupSerializer, AppSerializer, host_serializer,\
-    app_history_serializer, app_statistics_serializer
+    app_history_serializer, app_statistics_serializer, manager_app_serializer
 from api.models import Group, App, Host, AppStatistics, AppHistory
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
@@ -72,7 +72,11 @@ def group_detail(request, pk):
 def app_list(request):
 
     if request.method == 'GET':
-        tasks = App.objects.filter(enable=1).all()
+        groupid = request.GET.get('groupid', None)
+        if groupid:
+            tasks = App.objects.filter(enable=1).filter(group_id=groupid).all()
+        else:
+            tasks = App.objects.filter(enable=1).all()
         serializer = AppSerializer(tasks, many=True)
         return Response(serializer.data)
 
@@ -141,7 +145,6 @@ def app_detail(request, pk):
 @api_view(['GET', 'POST'])
 @csrf_exempt
 def manager_detail(request, pk):
-
     try:
         pk = int(pk)
         app = App.objects.get(pk=pk)
@@ -149,6 +152,9 @@ def manager_detail(request, pk):
         app = App.objects.filter(unique_name=pk).first()
     if not app:
         return HttpResponse(status=404)
+    elif request.method == 'GET':
+        serializer = manager_app_serializer(app)
+        return JsonResponse(serializer.data)
 
     elif request.method == 'POST':
         app.name = request.data.get("name", app.name)
@@ -156,7 +162,7 @@ def manager_detail(request, pk):
         app.group_id = request.data.get("group_id", app.group_id)
         app.configuration = request.data.get("configuration", app.configuration)
         app.save()
-        serializer = AppSerializer(app, many=False)
+        serializer = manager_app_serializer(app, many=False)
         return JsonResponse(serializer.data, safe=False)
 
 
@@ -213,15 +219,14 @@ def app_history_list(request):
 
 
 @api_view(['GET'])
-def app_statistics_list(request):
+def app_statistics_list(request, pk):
     limit = int(request.GET.get('limit', 12))
-    appid = request.GET.get('appid')
     start_date = request.GET.get('startDate', None)
     end_date = request.GET.get('endDate', None)
     if start_date and end_date:
-        appstatistics_list = AppStatistics.objects.filter(app_id=appid).filter(time__range=(start_date, end_date)).order_by('-id').all()
+        appstatistics_list = AppStatistics.objects.filter(app_id=pk).filter(time__range=(start_date, end_date)).order_by('-id').all()
     else:
-        appstatistics_list = AppStatistics.objects.filter(app_id=appid).order_by('-id')[:limit].all()
+        appstatistics_list = AppStatistics.objects.filter(app_id=pk).order_by('-id')[:limit].all()
     serializer = app_statistics_serializer(appstatistics_list, many=True)
     return JsonResponse(serializer.data, safe=False)
 

@@ -17,15 +17,18 @@ class App(models.Model):
     last_update = models.DateTimeField()
 
     @classmethod
-    def create(cls, name, host_id, status, message, enable, group_id, last_update=datetime.now()):
+    def create(cls, name, host_id, status, message, enable, group_id):
         app = cls(name=name,
                   host_id=host_id,
                   group_id=group_id,
                   status=status,
                   message=message,
                   enable=enable,
-                  last_update=last_update)
+                  last_update=datetime.now())
         return app
+
+    def convert_to_epoc(self):
+        return self.last_update.strftime("%Y-%m-%d %H:%M:%S")
 
 
 class AppStatistics(models.Model):
@@ -69,6 +72,11 @@ class AppHistory(models.Model):
 
     def convert_to_epoc(self):
         return self.time.strftime("%Y-%m-%d %H:%M:%S")
+
+    @classmethod
+    def create(cls, app_id, status, message):
+        group = cls(app_id=app_id, status=status, message=message, time=datetime.now())
+        return group
 
 
 class Host(models.Model):

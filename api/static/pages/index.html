@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+<meta charset="UTF-8">
+<title>Small Monitor</title>
+<link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap-theme.css" />
+<link rel="stylesheet" href="/static/css/monitor.css" />
+<script type="text/javascript" src="/static/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bower_components/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="/static/bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="/static/js/monitor.js"></script>
+</head>
+<body ng-controller="myController" ng-init="initData()">
+<div>
+<div name="nav">
+
+<ul class="nav nav-tabs nav-justified">
+      <li role="presentation" ng-repeat="countgroup in countGroups" ng-class="isCurrentGroup(countgroup)" ng-click="changeGroup(countgroup)"><a href="#">{{countgroup.displayName}}
+      <span data-toggle="tooltip" data-placement="right" ng-class="getNavCss(countgroup)" title="application count in group"  class="badge " >{{countgroup.statistics.total}}</span>
+      </a></li>
+    </ul>
+</div>
+
+<div class="input-group input-group-lg">
+  <span class="input-group-addon" id="sizing-addon1">Filter</span>
+  <input id="filter" type="text" class="form-control" placeholder="app name" ng-model="filterApp" aria-describedby="sizing-addon1">
+</div>
+<div>
+	<ul class="pagination">
+		<li><a href="#">Page:</a></li>
+		<li ng-class="{active:n==pageation.currentPage}"
+			ng-click="pagenationTo(n)" ng-repeat="n in pageation.pages "><a
+			href="#">{{n}}</a></li>
+
+	</ul>
+	<table class="table app-table">
+		<thead>
+			<tr>
+			<th ng-class="item.colClass" style="vertical-align: middle" ng:click="changeSorting(item)" ng-repeat="item in header">{{item.displayName}}
+				<span ng-show="sort.column == item.name && sort.descending == false"
+				style="float: right; font-size: 60%; padding-top: 5px;"
+				class="glyphicon glyphicon-chevron-up"></span> 
+				
+				<span ng-show="sort.column == item.name && sort.descending == true"
+				style="float: right; font-size: 60%; padding-top: 5px;"
+				class="glyphicon glyphicon-chevron-down"></span>
+			</th>
+			</tr>
+		</thead>
+		<tbody>
+		<tr class="group-app" ng-repeat-start="app in getAppsByFilter()  | orderBy:customSort:sort.descending" ng-click="drawDetails(app, $event)"
+		ng-show="$index >= (pageation.currentPage-1) * pageation.itemPerPage && $index < pageation.currentPage * pageation.itemPerPage">
+		<td>
+	 <span data-toggle="tooltip" data-placement="right"  title="{{app.status}}" class="glyphicon app-icon" ng-class="getClassByStatus(app.status)" data-toggle="tooltip" data-placement="right" ></span>
+		</td>
+		<td>{{app.host_id}}</td>
+		<td>{{app.name}}</td>
+		<td>{{app.last_update}}</td>
+		<td class="col-lg-1">
+			<a name="operation_app" href="/manager/{{app.id}}" target="_blank"><span class="glyphicon glyphicon-cog manager-app" aria-hidden="true"></span></a>
+		</td>
+		</tr>
+		<tr class="app-chart" style="display: none;"  ng-repeat-end ng-show="$index >= (pageation.currentPage-1) * pageation.itemPerPage && $index < pageation.currentPage * pageation.itemPerPage">
+		<td  colspan="12">
+		<div class="chartWrapper">
+		<div id="highCharts" style="text-align:center;"></div>
+	</div>
+			<div id="statushistory"></div>
+			<div class="panel panel-info app-manager" style="margin-top:12px" ng-show="app.message.length>5">
+		        <div class="panel-heading ">Note</div>
+			     <div class="app-information" name="information"></div>
+			</div>
+		</td>
+		</tr>
+		</tbody>
+	</table>
+		<div class="row">
+            <div class="col-md-6" style="display: block; vertical-align: middle;">
+        <div style="margin-top: 20px; padding: 6px 0;">   
+            <span style=" font-size: 18px; margin-left: 5px;">page {{pageation.currentPage}} in total page {{pageation.pages.length}} of {{pageation.totalnum}} apps</span></div></div>
+            <div class="col-md-6">
+            <div style='  float: right;  padding-right: 16px; '>
+            <ul class="pagination">
+            <li ng-show='pageation.currentPage == 1' class="paginate_button previous disabled" tabindex="0"><a href="#"  >&laquo;</a></li>
+            <li ng-show='pageation.currentPage != 1' class="paginate_button" tabindex="0"><a href="#" ng-click="pagenationTo(1)">&laquo;</a></li>
+            <li ng-show='pageation.currentPage == 1' class="paginate_button previous disabled" tabindex="0"><a href="#"  >Previous</a></li>
+            <li ng-show='pageation.currentPage != 1' class="paginate_button" tabindex="0"><a href="#" ng-click="pagenationTo(pageation.currentPage - 1)">Previous</a></li>
+            <li ng-show='pageation.currentPage == pageation.pages.length || pageation.pages.length == 0' class="paginate_button disabled" aria-controls="new-update-table" ><a href="#"  >Next</a></li>
+            <li ng-show='pageation.currentPage != pageation.pages.length && pageation.pages.length != 0' class="paginate_button" aria-controls="new-update-table" ><a href="#" ng-click="pagenationTo(pageation.currentPage + 1)" >Next</a></li>
+            <li ng-show='pageation.currentPage == pageation.pages.length || pageation.pages.length == 0' class="paginate_button disabled" aria-controls="new-update-table" ><a href="#"  >&raquo;</a></li>
+            <li ng-show='pageation.currentPage != pageation.pages.length && pageation.pages.length != 0' class="paginate_button" aria-controls="new-update-table" ><a href="#" ng-click="pagenationTo(pageation.pages.length)">&raquo;</a></li>
+            </ul></div></div></div>
+	
+</div>
+</div>
+</body>
+</html>

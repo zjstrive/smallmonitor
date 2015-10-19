@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from api import views
+from smallmonitor.views import homepage, manager
 
 
-urlpatterns = [    url(r'^api/groups/$', views.group_list),
+urlpatterns = [
+    url(r'^$', homepage),
+    url(r'^manager/(?P<appid>[0-9]+)/$', manager),
+    url(r'^api/groups/$', views.group_list),
     url(r'^api/groups/(?P<pk>[0-9]+)/$', views.group_detail),
     url(r'^api/apps/$', views.app_list),
     url(r'^api/app/(?P<pk>.+)/$', views.app_detail),
@@ -26,7 +30,7 @@ urlpatterns = [    url(r'^api/groups/$', views.group_list),
     url(r'^api/hosts/$', views.host_list),
     url(r'^api/hosts/(?P<pk>[0-9]+)/$', views.host_detail),
     url(r'^api/history/$', views.app_history_list),
-    url(r'^api/statistics/$', views.app_statistics_list),
+    url(r'^api/statistics/(?P<pk>[0-9]+)$', views.app_statistics_list),
     url(r'^api/count/groups/$', views.count_groups_statistics_detail),
     url(r'^api/count/group/(?P<pk>[0-9]+)/$', views.count_group_statistics_detail),
 ]

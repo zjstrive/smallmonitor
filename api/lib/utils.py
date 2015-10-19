@@ -1,8 +1,3 @@
-'''
-Created on Sep 22, 2015
-
-@author: jie
-'''
 
 import json
 from django.http import HttpResponse
